@@ -3,10 +3,17 @@ require "lsh/version"
 module Lsh
   class << self
     attr_accessor :random_index, :random_indexes
-    attr_accessor :k, :c, :L
+    attr_accessor :k, :c, :l
     @k = 5
     @c = 4
-    @L = 4
+    @l = 4
+
+    def parameter(params={})
+      @k = params[:k] if params[:k]
+      @c = params[:c] if params[:c]
+      @l = params[:l] if params[:l]
+      "<Lsh::parameter  k:#{@k}, c:#{@c}, l:#{@l}>"
+    end
 
     def unary(query, _c=nil)
       @c = _c if _c
@@ -28,10 +35,10 @@ module Lsh
     end
 
     def make_random_indexes(length, l=nil)
-      @L = l if l
+      @l = l if l
       @random_indexes ||= begin
         indexes = []
-        @L.times { indexes << make_random_index(length) }
+        @l.times { indexes << make_random_index(length) }
         indexes
       end
     end

@@ -65,4 +65,16 @@ describe Lsh do
       end
     end
   end
+
+  describe 'Lsh#parameter' do
+    context "when add parameter" do
+      it "matches parameter" do
+        parameter = {k: 2, c: 4, l: 4}
+        Lsh::parameter(parameter)
+        expect(Lsh::k).to eq(parameter[:k])
+        expect(Lsh::c).to eq(parameter[:c])
+        expect(Lsh::l).to eq(parameter[:l])
+      end
+    end
+  end
 end
