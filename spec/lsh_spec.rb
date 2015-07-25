@@ -27,6 +27,13 @@ describe Lsh do
       Lsh::k = k
       expect(Lsh::make_random_index(Lsh::unary(query).length).length).to eq(k)
     end
+
+    context "when k=3 and random_indexe=[1,2]" do
+      it "raise ConstrainError" do
+        Lsh::k = 3
+        expect{ Lsh::random_index = [1,2] }.to raise_error(ConstrainError)
+      end
+    end
   end
 
   describe "Lsh#hash" do
@@ -36,6 +43,7 @@ describe Lsh do
 
     context "when c=4, q=[1, 2, 4], random-indexes=[2,4,8,11]" do
       it do
+        Lsh::k = 4
         Lsh::random_index = random_index
         unaried_query = Lsh::unary(q, c)
         expect(Lsh::hash(unaried_query)).to eq([0,1,1,1])
@@ -79,16 +87,19 @@ describe Lsh do
   end
 
   describe 'Lsh#make_random_indexes' do
-    context "when L=4" do
-      it do
-        Lsh::random_indexes = nil
-        expect(Lsh::make_random_indexes(10, 4).length).to eq(4)
-      end
-    end
     it "is array of random_index" do
       indexs = Lsh::make_random_indexes(10, 4)
       indexs.each do |element|
         expect(element).to be_a(Array)
+      end
+    end
+
+    context "with l=3 and random_indexes=[[4,5,6,7]]" do
+      it "raise ConstrainError" do
+        Lsh::l = 3
+        expect{
+          Lsh::random_indexes = [[4,5,6,7]]
+        }.to raise_error(ConstrainError)
       end
     end
   end

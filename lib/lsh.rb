@@ -1,4 +1,5 @@
 require "lsh/version"
+require 'lsh/error'
 
 module Lsh
   class << self
@@ -25,6 +26,16 @@ module Lsh
       _unary
     end
 
+    def random_index=(random_index)
+      @random_index = random_index
+      check_constaint(@random_index, @k)
+    end
+
+    def random_indexes=(random_indexes)
+      @random_indexes = random_indexes
+      check_constaint(@random_indexes, @l)
+    end
+
     def make_random_index(length)
       @random_index ||= begin
         @random_index = []
@@ -32,6 +43,7 @@ module Lsh
         @k.times { @random_index << indexs.shuffle!.pop }
         @random_index
       end
+      check_constaint(@random_index, @k)
     end
 
     def make_random_indexes(length, l=nil)
@@ -41,6 +53,7 @@ module Lsh
         @l.times { indexes << make_random_index(length) }
         indexes
       end
+      check_constaint(@random_indexes, @l)
     end
 
     def hash(unaried_query, random_index=nil)
@@ -66,6 +79,15 @@ module Lsh
       make_random_indexes(unaried_query.length)
       @random_indexes.map do |random_index|
         hash(unaried_query, random_index)
+      end
+    end
+
+    private
+    def check_constaint(target, expected)
+      if target.length == expected
+        target
+      else
+        raise ConstrainError
       end
     end
   end
