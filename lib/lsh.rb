@@ -61,5 +61,12 @@ module Lsh
       q = q.join('').to_i(2)
       (p ^ q).to_s(2)
     end
+
+    def hash_l(unaried_query)
+      make_random_indexes(unaried_query.length)
+      @random_indexes.map do |random_index|
+        hash(unaried_query, random_index)
+      end
+    end
   end
 end

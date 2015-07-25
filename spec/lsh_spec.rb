@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Lsh do
   let(:query) { [1, 2, 4] }
   let(:c) { 4 }
+  let(:l) { 4 }
   let(:k) { 5 }
 
   it 'has a version number' do
@@ -47,6 +48,21 @@ describe Lsh do
     end
   end
 
+  describe 'Lsh#hash_l' do
+    let(:random_indexes) { [[2,4,8,11], [9,4,7,10], [0,2,9,5], [3,6,2,4]] }
+    let(:k) { 4 }
+    context "with random_indexes=[[2,4,8,11], [9,4,7,10], [0,2,9,5], [3,6,2,4]]" do
+      it do
+        Lsh::parameter({c: c, k: k, l: l})
+        Lsh::random_indexes = random_indexes
+        unaried_query = Lsh::unary(query)
+        expect(Lsh::hash_l(unaried_query)).to eq(
+          [[0,1,1,1], [1,1,0,1], [1,0,1,1], [0,0,0,1]]
+        )
+      end
+    end
+  end
+
   describe "Lsh#hamming_distance" do
     context "when p=[1,0,3], q=[2,0,2] c=3, k=4, random-indexes=[2,4,8,11]" do
       it  do
@@ -64,7 +80,10 @@ describe Lsh do
 
   describe 'Lsh#make_random_indexes' do
     context "when L=4" do
-      it { expect(Lsh::make_random_indexes(10, 4).length).to eq(4)  }
+      it do
+        Lsh::random_indexes = nil
+        expect(Lsh::make_random_indexes(10, 4).length).to eq(4)
+      end
     end
     it "is array of random_index" do
       indexs = Lsh::make_random_indexes(10, 4)
