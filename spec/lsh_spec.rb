@@ -19,7 +19,7 @@ describe Lsh do
     it do
       Lsh::k = k
       indexs = Lsh::make_random_indexes(Lsh::unary(query).length)
-      expect(indexs).to eq(indexs)
+      expect(indexs).to eq(indexs) #just wanted to see it works or not
     end
 
     it "returns random index"do
