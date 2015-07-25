@@ -43,8 +43,8 @@ module Lsh
       end
     end
 
-    def hash(unaried_query)
-      make_random_index(unaried_query.length) unless random_index
+    def hash(unaried_query, random_index=nil)
+      random_index = make_random_index(unaried_query.length) if random_index.nil?
       random_index.map{ |i| unaried_query[i] }
     end
 

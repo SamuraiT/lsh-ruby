@@ -29,12 +29,20 @@ describe Lsh do
   end
 
   describe "Lsh#hash" do
+    let(:c) { 4 }
+    let(:q) { [1, 2, 4] }
+    let(:random_index) { [2,4,8,11] }
+
     context "when c=4, q=[1, 2, 4], random-indexes=[2,4,8,11]" do
       it do
-        c = 4
-        q=[1, 2, 4]
-        Lsh::random_index = [2,4,8,11]
-        expect(Lsh::hash(Lsh::unary(q, c))).to eq([0,1,1,1])
+        Lsh::random_index = random_index
+        unaried_query = Lsh::unary(q, c)
+        expect(Lsh::hash(unaried_query)).to eq([0,1,1,1])
+      end
+
+      it do
+        unaried_query = Lsh::unary(q, c)
+        expect(Lsh::hash(unaried_query, random_index)).to eq([0,1,1,1])
       end
     end
   end
