@@ -18,13 +18,13 @@ describe Lsh do
   describe 'Lsh#random_index' do
     it do
       Lsh::k = k
-      indexs = Lsh::make_random_indexes(Lsh::unary(query).length)
+      indexs = Lsh::make_random_index(Lsh::unary(query).length)
       expect(indexs).to eq(indexs) #just wanted to see it works or not
     end
 
     it "returns random index"do
       Lsh::k = k
-      expect(Lsh::make_random_indexes(Lsh::unary(query).length).length).to eq(k)
+      expect(Lsh::make_random_index(Lsh::unary(query).length).length).to eq(k)
     end
   end
 
@@ -33,7 +33,7 @@ describe Lsh do
       it do
         c = 4
         q=[1, 2, 4]
-        Lsh::random_indexes = [2,4,8,11]
+        Lsh::random_index = [2,4,8,11]
         expect(Lsh::hash(Lsh::unary(q, c))).to eq([0,1,1,1])
       end
     end
@@ -46,7 +46,7 @@ describe Lsh do
         Lsh::k = 4
         p = [1,0,3]
         q = [2,0,2]
-        Lsh::random_indexes = [2,4,8,11]
+        Lsh::random_index = [2,4,8,11]
         p = Lsh::unary(p, Lsh::c)
         q = Lsh::unary(q, Lsh::c)
         expect(Lsh::hamming_distance(p,q)).to eq(2)
