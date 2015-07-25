@@ -2,10 +2,9 @@ require "lsh/version"
 
 module Lsh
   class << self
-    @@k = 5
-    def k=(k)
-      @@k = k
-    end
+    attr_accessor :random_indexes
+    attr_accessor :k
+    @k = 5
 
     def unary(query, c=4)
       _unary = []
@@ -16,12 +15,12 @@ module Lsh
       _unary
     end
 
-    def random_index(length)
-      @@random_index ||= begin
-        @@random_index = []
+    def make_random_indexes(length)
+      @random_indexes ||= begin
+        @random_indexes = []
         indexs = [*0...length]
-        @@k.times { @@random_index << indexs.shuffle!.pop }
-        @@random_index
+        @k.times { @random_indexes << indexs.shuffle!.pop }
+        @random_indexes
       end
     end
   end
