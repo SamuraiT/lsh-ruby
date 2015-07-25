@@ -53,4 +53,16 @@ describe Lsh do
       end
     end
   end
+
+  describe 'Lsh#make_random_indexes' do
+    context "when L=4" do
+      it { expect(Lsh::make_random_indexes(10, 4).length).to eq(4)  }
+    end
+    it "is array of random_index" do
+      indexs = Lsh::make_random_indexes(10, 4)
+      indexs.each do |element|
+        expect(element).to be_a(Array)
+      end
+    end
+  end
 end
