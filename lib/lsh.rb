@@ -4,15 +4,18 @@ require 'lsh/error'
 module Lsh
   class << self
     attr_accessor :random_index, :random_indexes
-    attr_accessor :k, :c, :l
+    attr_accessor :k, :c, :l, :bucket
+
     @k = 5
     @c = 4
     @l = 4
+    @bucket = {}
 
     def parameter(params={})
       @k = params[:k] if params[:k]
       @c = params[:c] if params[:c]
       @l = params[:l] if params[:l]
+      if params[:bucket] then @bucket = params[:bucket] else @bucket = {} end
       "<Lsh::parameter  k:#{@k}, c:#{@c}, l:#{@l}>"
     end
 
@@ -80,6 +83,42 @@ module Lsh
       @random_indexes.map do |random_index|
         hash(unaried_query, random_index)
       end
+    end
+
+    def store2bucket(query)
+      hashes = hash_l(unary(query))
+      hashes.map!{|h| h.join }
+      hashes.each do |h|
+        if @bucket[h].nil?
+          @bucket[h] = [query]
+        else
+          @bucket[h] << query
+        end
+      end
+    end
+
+    def search(query)
+      hashes = hash_l(unary(query))
+      hashes.map!{|h| h.join }
+      memo = {distance: Float::INFINITY, query: nil }
+      hashes.each do |h|
+        if @bucket[h].nil?
+          next
+        else
+          @bucket[h].each do |b|
+            #FIXME to know weather it is similar or not
+            # we might not use hamming_distance
+            distance = hamming_distance(unary(b),unary(query))
+            if distance < memo[:distance]
+              memo[:distance] = distance
+              memo[:query] = [b]
+            elsif distance == memo[:distance] && memo[:query].last != b
+              memo[:query] << b
+            end
+          end
+        end
+      end
+      memo
     end
 
     private

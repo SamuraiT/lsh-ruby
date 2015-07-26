@@ -58,10 +58,9 @@ describe Lsh do
 
   describe 'Lsh#hash_l' do
     let(:random_indexes) { [[2,4,8,11], [9,4,7,10], [0,2,9,5], [3,6,2,4]] }
-    let(:k) { 4 }
     context "with random_indexes=[[2,4,8,11], [9,4,7,10], [0,2,9,5], [3,6,2,4]]" do
       it do
-        Lsh::parameter({c: c, k: k, l: l})
+        Lsh::parameter({c: 4, k: 4, l: 4})
         Lsh::random_indexes = random_indexes
         unaried_query = Lsh::unary(query)
         expect(Lsh::hash_l(unaried_query)).to eq(
@@ -113,6 +112,32 @@ describe Lsh do
         expect(Lsh::c).to eq(parameter[:c])
         expect(Lsh::l).to eq(parameter[:l])
       end
+    end
+  end
+
+  describe 'Lsh#store2bucket' do
+    let(:random_indexes) { [[2,4,8,11], [9,4,7,10], [0,2,9,5], [3,6,2,4]] }
+    it "stores hash" do
+      Lsh::parameter({c: 4, k: 4, l: 4})
+      Lsh::random_indexes = random_indexes
+      Lsh::store2bucket(query)
+      expect(Lsh::bucket).to eq(
+        {"0111"=>[[1, 2, 4]],
+         "1101"=>[[1, 2, 4]],
+         "1011"=>[[1, 2, 4]],
+         "0001"=>[[1, 2, 4]]
+      })
+    end
+  end
+
+  describe 'Lsh#search' do
+    let(:random_indexes) { [[2,4,8,11], [9,4,7,10], [0,2,9,5], [3,6,2,4]] }
+    it "search query" do
+      Lsh::parameter({c: 4, k:4, l:4})
+      Lsh::random_indexes = random_indexes
+      querys = [[1,2,4], [1,3,2], [0,2,4], [3,4,1], [2,5,3], [2,2,1]]
+      querys.each do |q| Lsh::store2bucket(q) end
+      expect(Lsh::search([1,1,3])[:query].last).to eq([1,2,4])
     end
   end
 end
